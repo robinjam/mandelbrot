@@ -4,12 +4,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import net.robinjam.mandelbrot.compute.Job;
+import net.robinjam.mandelbrot.compute.MandelbrotWorker;
+import net.robinjam.mandelbrot.compute.WorkerFactory;
 
-public class MandelbrotGUI extends JPanel implements ActionListener, SelectionListener.Callback {
+public class FractalPanel extends JPanel implements ActionListener, SelectionListener.Callback {
     
     Job job;
     Timer timer;
@@ -17,10 +22,10 @@ public class MandelbrotGUI extends JPanel implements ActionListener, SelectionLi
     Viewport viewport;
     int max_iterations;
     SelectionListener select;
+    WorkerFactory factory;
     
-    public MandelbrotGUI(int width, int height, int max_iterations) {
+    public FractalPanel(int width, int height, int max_iterations, WorkerFactory factory) {
         this.max_iterations = max_iterations;
-        setSize(new Dimension(width, height));
         setPreferredSize(new Dimension(width, height));
         setBackground(Color.BLACK);
         
@@ -31,26 +36,39 @@ public class MandelbrotGUI extends JPanel implements ActionListener, SelectionLi
         select = new SelectionListener(this);
         addMouseListener(select);
         addMouseMotionListener(select);
-        startJob();
+        this.factory = factory;
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(FractalPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+        });
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                startJob();
+            }
+
+        });
     }
     
-    private void startJob() {
-        job = new Job(viewport, getWidth(), getHeight(), max_iterations);
+    public void startJob() {
+        job = new Job(factory, viewport, getWidth(), getHeight(), max_iterations);
         timer.start();
     }
-    
-    /*@Override
-    public void update(Graphics g) {
-        paint(g);
-    }*/
     
     @Override
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(image, null, this);
         select.paint(g);
-        //for (Component c : getComponents())
-        //    c.paint(g);
     }
     
     @Override
@@ -64,8 +82,8 @@ public class MandelbrotGUI extends JPanel implements ActionListener, SelectionLi
     
     public static void main(String[] args) {
         JFrame window = new JFrame("Fractal explorer");
-        
-        window.add(new MandelbrotGUI(800, 600, 1000));
+
+        window.add(new FractalPanel(800, 600, 1000, MandelbrotWorker.getFactory()));
         window.pack();
         
         window.setResizable(false);

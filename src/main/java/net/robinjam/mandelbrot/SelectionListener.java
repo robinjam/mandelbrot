@@ -22,17 +22,18 @@ public class SelectionListener implements MouseListener, MouseMotionListener {
 
     public void mousePressed(MouseEvent me) {
         start = me.getPoint();
+        end = me.getPoint();
     }
 
     public void mouseReleased(MouseEvent me) {
         int x1 = start.x;
-            int x2 = end.x;
-            int y1 = start.y;
-            int y2 = end.y;
-            int x = Math.min(x1, x2);
-            int y = Math.min(y1, y2);
-            int width = Math.abs(x1 - x2);
-            int height = Math.abs(y1 - y2);
+        int x2 = end.x;
+        int y1 = start.y;
+        int y2 = end.y;
+        int x = Math.min(x1, x2);
+        int y = Math.min(y1, y2);
+        int width = Math.abs(x1 - x2);
+        int height = Math.abs(y1 - y2);
         callback.selected(new Point(x, y), new Point(x + width, y + height));
         start = null;
         end = null;
