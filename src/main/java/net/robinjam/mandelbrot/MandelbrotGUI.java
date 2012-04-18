@@ -1,5 +1,6 @@
 package net.robinjam.mandelbrot;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -17,12 +18,18 @@ public class MandelbrotGUI extends Panel implements ActionListener {
     
     public MandelbrotGUI(int width, int height, int max_iterations) {
         setPreferredSize(new Dimension(width, height));
+        setBackground(Color.BLACK);
         
         Viewport viewport = new Viewport();
         job = new Job(viewport, width, height, max_iterations);
         
         timer = new Timer(1000, this);
         timer.start();
+    }
+    
+    @Override
+    public void update(Graphics g) {
+        paint(g);
     }
     
     @Override
