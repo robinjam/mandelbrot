@@ -27,7 +27,7 @@ public class Viewport {
         double scale = Math.min(screen_width / 4, screen_height / 3.2);
         
         double re = (x - screen_width / 2) / zoom / scale + center.getRe();
-        double im = -(y - screen_height / 2) / zoom / scale - center.getIm();
+        double im = -(y - screen_height / 2) / zoom / scale + center.getIm();
         return new Complex(re, im);
     }
     
