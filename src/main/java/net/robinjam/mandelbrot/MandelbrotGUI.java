@@ -16,6 +16,7 @@ public class MandelbrotGUI extends JPanel implements ActionListener, SelectionLi
     BufferedImage image;
     Viewport viewport;
     int max_iterations;
+    SelectionListener select;
     
     public MandelbrotGUI(int width, int height, int max_iterations) {
         this.max_iterations = max_iterations;
@@ -27,11 +28,9 @@ public class MandelbrotGUI extends JPanel implements ActionListener, SelectionLi
         
         timer = new Timer(100, this);
         
-        SelectionListener select = new SelectionListener(this);
+        select = new SelectionListener(this);
         addMouseListener(select);
         addMouseMotionListener(select);
-        select.setBounds(0, 0, width, height);
-        add(select);
         startJob();
     }
     
@@ -49,8 +48,9 @@ public class MandelbrotGUI extends JPanel implements ActionListener, SelectionLi
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(image, null, this);
-        for (Component c : getComponents())
-            c.paint(g);
+        select.paint(g);
+        //for (Component c : getComponents())
+        //    c.paint(g);
     }
     
     @Override
@@ -84,6 +84,11 @@ public class MandelbrotGUI extends JPanel implements ActionListener, SelectionLi
         viewport.setCenter(viewport.getPixel(cx, cy, getWidth(), getHeight()));
         viewport.setZoom(ratio * viewport.getZoom());
         startJob();
+    }
+
+    @Override
+    public void moved() {
+        repaint();
     }
     
 }

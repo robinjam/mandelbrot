@@ -6,9 +6,8 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import javax.swing.JPanel;
 
-public class SelectionListener extends JPanel implements MouseListener, MouseMotionListener {
+public class SelectionListener implements MouseListener, MouseMotionListener {
     
     private Point start;
     private Point end;
@@ -16,7 +15,6 @@ public class SelectionListener extends JPanel implements MouseListener, MouseMot
     
     public SelectionListener(Callback callback) {
         this.callback = callback;
-        setOpaque(false);
     }
     
     public void mouseClicked(MouseEvent me) {
@@ -38,7 +36,6 @@ public class SelectionListener extends JPanel implements MouseListener, MouseMot
         callback.selected(new Point(x, y), new Point(x + width, y + height));
         start = null;
         end = null;
-        getParent().repaint();
     }
 
     public void mouseEntered(MouseEvent me) {
@@ -50,16 +47,14 @@ public class SelectionListener extends JPanel implements MouseListener, MouseMot
     public void mouseDragged(MouseEvent me) {
         if (start != null) {
             end = me.getPoint();
-            getParent().repaint();
+            callback.moved();
         }
     }
 
     public void mouseMoved(MouseEvent me) {
     }
     
-    @Override
     public void paint(Graphics g) {
-        super.paint(g);
         if (start != null && end != null) {
             g.setColor(new Color(0.0f, 0.2f, 0.8f, 0.5f));
             int x1 = start.x;
@@ -77,7 +72,8 @@ public class SelectionListener extends JPanel implements MouseListener, MouseMot
     }
     
     public static interface Callback {
-        
+
+        public void moved();
         public void selected(Point lower, Point upper);
         
     }
