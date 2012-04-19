@@ -118,6 +118,16 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
             
         });
         
+        window.setMenuBar(new MainMenu(new MainMenu.Callback() {
+
+            @Override
+            public void maxIterationsChanged(int max_iterations) {
+                mandelbrotPanel.max_iterations = max_iterations;
+                mandelbrotPanel.startJob();
+            }
+            
+        }));
+        
         window.add(mandelbrotPanel);
         window.pack();
         
