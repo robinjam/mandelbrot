@@ -7,6 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 
+/**
+ * The main menu for the application.
+ * 
+ * @author James Robinson
+ */
 public class MainMenu extends MenuBar {
     
     public MainMenu(final Callback callback) {
@@ -28,8 +33,14 @@ public class MainMenu extends MenuBar {
         add(maxIterations);
     }
     
+    /**
+     * Defines an interface that objects must implement in order to be notified when menu items are selected.
+     */
     public static interface Callback {
         
+        /**
+         * Called when the user changes the maximum number of iterations.
+         */
         public void maxIterationsChanged(int max_iterations);
         
     }
