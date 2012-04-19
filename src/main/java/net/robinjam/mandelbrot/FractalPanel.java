@@ -3,14 +3,14 @@ package net.robinjam.mandelbrot;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
+import javax.swing.*;
 import net.robinjam.mandelbrot.compute.Job;
+import net.robinjam.mandelbrot.compute.JuliaWorker;
 import net.robinjam.mandelbrot.compute.MandelbrotWorker;
 import net.robinjam.mandelbrot.compute.WorkerFactory;
 
@@ -60,14 +60,16 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
     }
     
     public void startJob() {
+        if (job != null)
+            job.cancel();
         job = new Job(factory, viewport, getWidth(), getHeight(), max_iterations);
         timer.start();
     }
     
     @Override
-    public void paint(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.drawImage(image, null, this);
+    public void paint(Graphics graphics) {
+        Graphics2D g = (Graphics2D) graphics;
+        g.drawImage(image, null, this);
         select.paint(g);
     }
     
@@ -81,9 +83,42 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
     }
     
     public static void main(String[] args) {
-        JFrame window = new JFrame("Fractal explorer");
+        final JFrame window = new JFrame("Fractal explorer");
 
-        window.add(new FractalPanel(800, 600, 1000, MandelbrotWorker.getFactory()));
+        final FractalPanel mandelbrotPanel = new FractalPanel(800, 640, 1000, MandelbrotWorker.getFactory());
+        mandelbrotPanel.addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent me) {
+                Complex c = mandelbrotPanel.viewport.getPixel(me.getX(), me.getY(), mandelbrotPanel.getWidth(), mandelbrotPanel.getHeight());
+                FractalPanel juliaPanel = new FractalPanel(400, 320, 1000, JuliaWorker.getFactory(c));
+                JDialog juliaWindow = new JDialog(window, "Julia Set for point " + c);
+                juliaWindow.add(juliaPanel);
+                juliaWindow.pack();
+                juliaWindow.setLocationRelativeTo(window);
+                juliaWindow.setResizable(false);
+                juliaWindow.setVisible(true);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent me) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent me) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent me) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent me) {
+            }
+            
+        });
+        
+        window.add(mandelbrotPanel);
         window.pack();
         
         window.setResizable(false);
@@ -93,13 +128,10 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
         window.setVisible(true);
     }
 
-    public void selected(Point lower, Point upper) {
-        int cx = (upper.x + lower.x) / 2;
-        int cy = (upper.y + lower.y) / 2;
-        double dx = (double) (upper.x - lower.x) / getWidth();
-        double dy = (double) (upper.y - lower.y) / getHeight();
-        double ratio = 1.0 / Math.max(dx, dy);
-        viewport.setCenter(viewport.getPixel(cx, cy, getWidth(), getHeight()));
+    @Override
+    public void selected(Rectangle selection) {
+        double ratio = 1.0 / Math.max((double) selection.width / getWidth(), (double) selection.height / getHeight());
+        viewport.setCenter(viewport.getPixel((int) selection.getCenterX(), (int) selection.getCenterY(), getWidth(), getHeight()));
         viewport.setZoom(ratio * viewport.getZoom());
         startJob();
     }

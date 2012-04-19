@@ -12,16 +12,16 @@ import net.robinjam.mandelbrot.Viewport;
 public class Job {
     
     int width, height;
-    Future<Worker.Pixel[]>[] rows;
     int max_iterations;
+    Future<Worker.Pixel[]>[] rows;
     
     public Job(WorkerFactory factory, Viewport viewport, int width, int height, int max_iterations) {
         this.width = width;
         this.height = height;
         this.max_iterations = max_iterations;
+        rows = new Future[height];
         
         ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        rows = new Future[height];
         
         for (int y = 0; y < height; y++) {
             Complex[] row = new Complex[width];
@@ -53,6 +53,11 @@ public class Job {
         }
         
         return result;
+    }
+    
+    public void cancel() {
+        for (Future row : rows)
+            row.cancel(false);
     }
     
     public boolean isDone() {
