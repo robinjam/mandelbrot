@@ -142,7 +142,7 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
     public void selectionCreated(Rectangle selection) {
         double ratio = 1.0 / Math.max((double) selection.width / getWidth(), (double) selection.height / getHeight());
         viewport.setCenter(viewport.getPixel((int) selection.getCenterX(), (int) selection.getCenterY(), getWidth(), getHeight()));
-        viewport.setZoom(ratio * viewport.getZoom());
+        viewport.zoom(ratio);
         startJob();
     }
 
