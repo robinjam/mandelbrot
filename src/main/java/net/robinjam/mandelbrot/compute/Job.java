@@ -15,30 +15,37 @@ public class Job {
     int max_iterations;
     Future<Worker.Pixel[]>[] rows;
     
-    public Job(WorkerFactory factory, Viewport viewport, int width, int height, int max_iterations) {
+    public Job(final WorkerFactory factory, final Viewport viewport, final int width, final int height, final int max_iterations) {
         this.width = width;
         this.height = height;
         this.max_iterations = max_iterations;
         rows = new Future[height];
         
-        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        
-        for (int y = 0; y < height; y++) {
-            Complex[] row = new Complex[width];
-            for (int x = 0; x < width; x++) {
-                row[x] = viewport.getPixel(x, y, width, height);
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+                for (int y = 0; y < height; y++) {
+                    Complex[] row = new Complex[width];
+                    for (int x = 0; x < width; x++) {
+                        row[x] = viewport.getPixel(x, y, width, height);
+                    }
+                    rows[y] = service.submit(factory.create(row, max_iterations));
+                }
+
+                service.shutdown();
             }
-            rows[y] = service.submit(factory.create(row, max_iterations));
-        }
         
-        service.shutdown();
+        }).start();
     }
     
     public BufferedImage getImage() {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         
         for (int y = 0; y < rows.length; y++) {
-            if (!rows[y].isDone()) continue;
+            if (rows[y] == null || !rows[y].isDone()) continue;
             MandelbrotWorker.Pixel[] row = null;
             
             try {
@@ -57,13 +64,14 @@ public class Job {
     
     public void cancel() {
         for (Future row : rows)
-            row.cancel(false);
+            if (row != null)
+                row.cancel(false);
     }
     
     public boolean isDone() {
         int num_complete = 0;
         for (Future f : rows)
-            if (f.isDone()) num_complete++;
+            if (f != null && f.isDone()) num_complete++;
         return num_complete == rows.length;
     }
     
