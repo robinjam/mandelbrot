@@ -2,9 +2,9 @@ package net.robinjam.mandelbrot.compute;
 
 import net.robinjam.mandelbrot.Complex;
 
-public class MandelbrotWorker extends Worker {
+public class BurningShipWorker extends Worker {
     
-    public MandelbrotWorker(Complex[] row, int max_iterations) {
+    public BurningShipWorker(Complex[] row, int max_iterations) {
         super(row, max_iterations);
     }
     
@@ -16,6 +16,8 @@ public class MandelbrotWorker extends Worker {
             Complex zn = new Complex();
             int n;
             for (n = 0; zn.modulusSquared() < 4 && n < max_iterations; n++) {
+                zn.setRe(Math.abs(zn.getRe()));
+                zn.setIm(Math.abs(zn.getIm()));
                 zn.square();
                 zn.add(z);
             }
@@ -29,7 +31,7 @@ public class MandelbrotWorker extends Worker {
 
             @Override
             public Worker create(Complex[] row, int max_iterations) {
-                return new MandelbrotWorker(row, max_iterations);
+                return new BurningShipWorker(row, max_iterations);
             }
 
         };

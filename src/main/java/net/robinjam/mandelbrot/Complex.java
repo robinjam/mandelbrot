@@ -21,6 +21,14 @@ public class Complex {
         return im;
     }
     
+    public void setRe(double re) {
+        this.re = re;
+    }
+    
+    public void setIm(double im) {
+        this.im = im;
+    }
+    
     public void square() {
         double new_re = re * re - im * im;
         im = 2 * re * this.im;

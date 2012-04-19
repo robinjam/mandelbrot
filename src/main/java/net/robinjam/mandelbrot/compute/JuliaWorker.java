@@ -13,8 +13,8 @@ public class JuliaWorker extends Worker {
     }
 
     @Override
-    public MandelbrotWorker.Pixel[] call() {
-        MandelbrotWorker.Pixel[] result = new MandelbrotWorker.Pixel[row.length];
+    public Pixel[] call() {
+        Pixel[] result = new Pixel[row.length];
         for (int i = 0; i < row.length; i++) {
             Complex z = row[i];
             Complex zn = z;
