@@ -35,7 +35,9 @@ public class SelectionListener implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        callback.selectionCreated(getSelection());
+        Rectangle selection = getSelection();
+        if (selection != null && (selection.width != 0 || selection.height != 0))
+            callback.selectionCreated(selection);
         start = null;
         end = null;
     }
