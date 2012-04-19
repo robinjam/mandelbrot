@@ -40,4 +40,12 @@ public class Complex {
         im += other.im;
     }
     
+    @Override
+    public String toString() {
+        if (im > 0)
+            return re + " + " + im + "i";
+        else
+            return re + " - " + -im + "i";
+    }
+    
 }
