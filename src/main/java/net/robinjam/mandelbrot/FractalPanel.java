@@ -9,6 +9,11 @@ import javax.swing.Timer;
 import net.robinjam.mandelbrot.compute.Job;
 import net.robinjam.mandelbrot.compute.WorkerFactory;
 
+/**
+ * Renders and displays a fractal.
+ * 
+ * @author James Robinson
+ */
 public class FractalPanel extends JPanel implements ActionListener, SelectionListener.Callback, Viewport {
     
     Job job;
@@ -18,21 +23,12 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
     SelectionListener select;
     WorkerFactory factory;
     
-        // The complex number represented by the pixel at the centre of the viewport
+    // The complex number represented by the pixel at the centre of the viewport
     private Complex center = new Complex();
     
     // The current zoom level
     private double zoom = 1;
     
-    /**
-     * Calculates the complex number associated with the given pixel, scaled based on the current viewport settings.
-     * 
-     * @param x The x-coordinate of the pixel.
-     * @param y The y-coordinate of the pixel.
-     * @param screen_width The width of the screen.
-     * @param screen_height The height of the screen.
-     * @return The complex number associated with the given pixel.
-     */
     @Override
     public Complex getPixel(int x, int y) {
         // Calculate a scale factor such that the region (-2 - 1.6i) to (2 + 1.6i) is always fully visible when the zoom level is 1
@@ -43,6 +39,14 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
         return new Complex(re, im);
     }
     
+    /**
+     * Creates a new fractal with the given settings.
+     * 
+     * @param width The width of the panel.
+     * @param height The height of the panel.
+     * @param max_iterations The maximum number of iterations for each pixel.
+     * @param factory The factory used to create each worker.
+     */
     public FractalPanel(int width, int height, int max_iterations, WorkerFactory factory) {
         this.max_iterations = max_iterations;
         setPreferredSize(new Dimension(width, height));
@@ -56,6 +60,9 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
         this.factory = factory;
     }
     
+    /**
+     * (re)starts the render job, cancelling the existing one if necessary.
+     */
     public void startJob() {
         if (job != null)
             job.cancel();
