@@ -46,5 +46,14 @@ public class Viewport {
     public void zoom(double amount) {
         zoom *= amount;
     }
+
+    /**
+     * Sets the zoom level to the given value.
+     * 
+     * @param zoom The zoom level to set, where 1 is the default.
+     */
+    void setZoom(int zoom) {
+        this.zoom = zoom;
+    }
     
 }

@@ -76,5 +76,11 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
     public void selectionMoved() {
         repaint();
     }
+
+    void resetZoom() {
+        viewport.setZoom(1);
+        viewport.setCenter(new Complex());
+        startJob();
+    }
     
 }

@@ -65,5 +65,10 @@ public class MainWindow extends JFrame implements MouseListener, MainMenu.Callba
 
     @Override
     public void mouseExited(MouseEvent me) {}
+
+    @Override
+    public void resetZoom() {
+        mandelbrotPanel.resetZoom();
+    }
     
 }

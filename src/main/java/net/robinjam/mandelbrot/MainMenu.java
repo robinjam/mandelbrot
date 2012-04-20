@@ -19,6 +19,7 @@ public class MainMenu extends MenuBar implements Observer {
     Menu favourites = new Menu("Favourites");
     
     public MainMenu(final Callback callback) {
+        // Max. Iterations menu
         Menu maxIterations = new Menu("Max. Iterations");
         NumberFormat f = NumberFormat.getInstance();
         for (final int i : new int[] { 10, 50, 100, 200, 500, 1000, 5000, 10000, 100000 }) {
@@ -34,10 +35,23 @@ public class MainMenu extends MenuBar implements Observer {
             maxIterations.add(item);
         }
         
-        Favourites.getInstance().addObserver(this);
+        // View menu
+        Menu view = new Menu("View");
+        MenuItem resetZoom = new MenuItem("Reset Zoom");
+        resetZoom.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                callback.resetZoom();
+            }
+        
+        });
+        view.add(resetZoom);
         
         add(maxIterations);
-        add(favourites);
+        add(view);
+        
+        Favourites.getInstance().addObserver(this);
     }
 
     @Override
@@ -54,6 +68,7 @@ public class MainMenu extends MenuBar implements Observer {
             
             });
             favourites.add(item);
+            add(favourites);
         }
     }
     
@@ -66,6 +81,11 @@ public class MainMenu extends MenuBar implements Observer {
          * Called when the user changes the maximum number of iterations.
          */
         public void maxIterationsChanged(int max_iterations);
+        
+        /**
+         * Called when the user requests the zoom level to be reset.
+         */
+        public void resetZoom();
         
     }
     
