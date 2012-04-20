@@ -9,6 +9,9 @@ import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.Observable;
 import java.util.Observer;
+import net.robinjam.mandelbrot.render.ColourScheme;
+import net.robinjam.mandelbrot.render.NormalColouring;
+import net.robinjam.mandelbrot.render.SmoothColouring;
 
 /**
  * The main menu for the application.
@@ -65,6 +68,24 @@ public class MainMenu extends MenuBar implements Observer {
             }
         
         });
+        MenuItem normalColouring = new MenuItem("Normal colouring");
+        normalColouring.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                RenderSettings.getInstance().setColourScheme(new NormalColouring());
+            }
+        
+        });
+        MenuItem smoothColouring = new MenuItem("Smooth colouring");
+        smoothColouring.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                RenderSettings.getInstance().setColourScheme(new SmoothColouring());
+            }
+        
+        });
         MenuItem resetZoom = new MenuItem("Reset Zoom");
         resetZoom.addActionListener(new ActionListener() {
 
@@ -77,6 +98,9 @@ public class MainMenu extends MenuBar implements Observer {
         view.add(mandelbrot);
         view.add(burningShip);
         view.add(tricorn);
+        view.addSeparator();
+        view.add(normalColouring);
+        view.add(smoothColouring);
         view.addSeparator();
         view.add(resetZoom);
         

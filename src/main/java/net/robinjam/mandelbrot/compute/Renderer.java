@@ -1,12 +1,10 @@
 package net.robinjam.mandelbrot.compute;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import net.robinjam.mandelbrot.Complex;
 import net.robinjam.mandelbrot.RenderSettings;
 import net.robinjam.mandelbrot.Viewport;
 
@@ -63,7 +61,7 @@ public class Renderer {
             
             // Draw each pixel in the current row to the image
             for (int x = 0; x < row.length; x++) {
-                result.setRGB(x, y, calculateColour(row[x].getZn(), row[x].getN(), RenderSettings.getInstance().getMaxIterations()).getRGB());
+                result.setRGB(x, y, RenderSettings.getInstance().getColourScheme().calculateColour(row[x].getZn(), row[x].getN()).getRGB());
             }
         }
         
@@ -86,15 +84,6 @@ public class Renderer {
         for (Future f : rows)
             if (f.isDone()) num_complete++;
         return num_complete == rows.length;
-    }
-    
-    private Color calculateColour(Complex zn, int n, int max_iterations) {
-        double mu = n - Math.log(Math.log(zn.modulus()) / Math.log(max_iterations)) / Math.log(2);
-        
-        if (n < max_iterations)
-            return Color.getHSBColor((float) mu * 0.01f + 0.5f, 0.6f, 1.0f);
-        else
-            return Color.BLACK;
     }
     
 }
