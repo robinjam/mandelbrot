@@ -2,11 +2,16 @@ package net.robinjam.mandelbrot.compute;
 
 import net.robinjam.mandelbrot.Complex;
 
+/**
+ * Handles rendering a Julia set.
+ * 
+ * @author James Robinson
+ */
 public class JuliaWorker extends Worker {
 
     private Complex c;
 
-    public JuliaWorker(Complex[] row, int max_iterations, Complex c) {
+    private JuliaWorker(Complex[] row, int max_iterations, Complex c) {
         super(row, max_iterations);
 
         this.c = c;
@@ -28,6 +33,10 @@ public class JuliaWorker extends Worker {
         return result;
     }
 
+    /**
+     * @param c The Complex number for the Julia set.
+     * @return A new {@link WorkerFactory} object that can be used to instantiate Julia workers for the given Complex number.
+     */
     public static WorkerFactory getFactory(final Complex c) {
         return new WorkerFactory() {
 

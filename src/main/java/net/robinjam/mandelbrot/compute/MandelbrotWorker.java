@@ -2,9 +2,14 @@ package net.robinjam.mandelbrot.compute;
 
 import net.robinjam.mandelbrot.Complex;
 
+/**
+ * Handles rendering the Mandelbrot set.
+ * 
+ * @author James Robinson
+ */
 public class MandelbrotWorker extends Worker {
     
-    public MandelbrotWorker(Complex[] row, int max_iterations) {
+    private MandelbrotWorker(Complex[] row, int max_iterations) {
         super(row, max_iterations);
     }
     
@@ -24,6 +29,9 @@ public class MandelbrotWorker extends Worker {
         return result;
     }
     
+    /**
+     * @return A new {@link WorkerFactory} object that can be used to instantiate Mandelbrot workers.
+     */
     public static WorkerFactory getFactory() {
         return new WorkerFactory() {
 

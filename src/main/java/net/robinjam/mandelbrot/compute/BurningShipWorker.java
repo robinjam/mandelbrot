@@ -2,9 +2,14 @@ package net.robinjam.mandelbrot.compute;
 
 import net.robinjam.mandelbrot.Complex;
 
+/**
+ * Handles rendering the Burning Ship fractal.
+ * 
+ * @author James Robinson
+ */
 public class BurningShipWorker extends Worker {
     
-    public BurningShipWorker(Complex[] row, int max_iterations) {
+    private BurningShipWorker(Complex[] row, int max_iterations) {
         super(row, max_iterations);
     }
     
@@ -26,6 +31,9 @@ public class BurningShipWorker extends Worker {
         return result;
     }
     
+    /**
+     * @return A new {@link WorkerFactory} object that can be used to instantiate Burning Ship workers.
+     */
     public static WorkerFactory getFactory() {
         return new WorkerFactory() {
 
