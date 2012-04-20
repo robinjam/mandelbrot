@@ -16,37 +16,28 @@ import net.robinjam.mandelbrot.Viewport;
  */
 public class Job {
     
-    int width, height;
-    int max_iterations;
-    Future<Worker.Pixel[]>[] rows;
+    private Viewport viewport;
+    private int max_iterations;
+    private Future<Worker.Pixel[]>[] rows;
     
     /**
      * Starts a render job with a number of threads equal to the number of available processor cores.
      * 
      * @param factory A {@link WorkerFactory} used to instantiate the workers used to render the fractal.
      * @param viewport The current viewport settings.
-     * @param width The width of the image.
-     * @param height The height of the image.
      * @param max_iterations The maximum number of iterations to perform for each pixel.
      */
-    public Job(final WorkerFactory factory, final Viewport viewport, final int width, final int height, final int max_iterations) {
-        this.width = width;
-        this.height = height;
+    public Job(final WorkerFactory factory, final Viewport viewport, final int max_iterations) {
+        this.viewport = viewport;
         this.max_iterations = max_iterations;
-        rows = new Future[height];
+        rows = new Future[viewport.getHeight()];
         
         ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
         // Iterate over every row in the fractal
-        for (int y = 0; y < height; y++) {
-            // Construct an array of complex numbers for the current row
-            Complex[] row = new Complex[width];
-            for (int x = 0; x < width; x++) {
-                row[x] = viewport.getPixel(x, y, width, height);
-            }
-            
+        for (int y = 0; y < viewport.getHeight(); y++) {
             // Add the worker to the queue
-            rows[y] = service.submit(factory.create(row, max_iterations));
+            rows[y] = service.submit(factory.create(viewport, y, max_iterations));
         }
 
         // Prevent the executor service from being reused
@@ -59,7 +50,7 @@ public class Job {
      * @return A BufferedImage containing the fully rendered rows.
      */
     public BufferedImage getImage() {
-        BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage result = new BufferedImage(viewport.getWidth(), viewport.getHeight(), BufferedImage.TYPE_INT_RGB);
         
         for (int y = 0; y < rows.length; y++) {
             // If the row is not finished rendering, skip it

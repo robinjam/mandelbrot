@@ -1,6 +1,7 @@
 package net.robinjam.mandelbrot.compute;
 
 import net.robinjam.mandelbrot.Complex;
+import net.robinjam.mandelbrot.Viewport;
 
 /**
  * Handles rendering a Julia set.
@@ -11,17 +12,17 @@ public class JuliaWorker extends Worker {
 
     private Complex c;
 
-    private JuliaWorker(Complex[] row, int max_iterations, Complex c) {
-        super(row, max_iterations);
+    private JuliaWorker(Viewport viewport, int row, int max_iterations, Complex c) {
+        super(viewport, row, max_iterations);
 
         this.c = c;
     }
 
     @Override
     public Pixel[] call() {
-        Pixel[] result = new Pixel[row.length];
-        for (int i = 0; i < row.length; i++) {
-            Complex z = row[i];
+        Pixel[] result = new Pixel[viewport.getWidth()];
+        for (int i = 0; i < viewport.getWidth(); i++) {
+            Complex z = viewport.getPixel(i, row);
             Complex zn = z;
             int n;
             for (n = 0; zn.modulusSquared() < 4 && n < max_iterations; n++) {
@@ -41,8 +42,8 @@ public class JuliaWorker extends Worker {
         return new WorkerFactory() {
 
             @Override
-            public Worker create(Complex[] row, int max_iterations) {
-                return new JuliaWorker(row, max_iterations, c);
+            public Worker create(Viewport viewport, int row, int max_iterations) {
+                return new JuliaWorker(viewport, row, max_iterations, c);
             }
 
         };

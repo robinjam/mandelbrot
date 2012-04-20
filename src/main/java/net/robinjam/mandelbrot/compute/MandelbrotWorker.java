@@ -1,6 +1,7 @@
 package net.robinjam.mandelbrot.compute;
 
 import net.robinjam.mandelbrot.Complex;
+import net.robinjam.mandelbrot.Viewport;
 
 /**
  * Handles rendering the Mandelbrot set.
@@ -9,15 +10,15 @@ import net.robinjam.mandelbrot.Complex;
  */
 public class MandelbrotWorker extends Worker {
     
-    private MandelbrotWorker(Complex[] row, int max_iterations) {
-        super(row, max_iterations);
+    private MandelbrotWorker(Viewport viewport, int row, int max_iterations) {
+        super(viewport, row, max_iterations);
     }
     
     @Override
     public Pixel[] call() {
-        Pixel[] result = new Pixel[row.length];
-        for (int i = 0; i < row.length; i++) {
-            Complex z = row[i];
+        Pixel[] result = new Pixel[viewport.getWidth()];
+        for (int i = 0; i < viewport.getWidth(); i++) {
+            Complex z = viewport.getPixel(i, row);
             Complex zn = new Complex();
             int n;
             for (n = 0; zn.modulusSquared() < 4 && n < max_iterations; n++) {
@@ -36,8 +37,8 @@ public class MandelbrotWorker extends Worker {
         return new WorkerFactory() {
 
             @Override
-            public Worker create(Complex[] row, int max_iterations) {
-                return new MandelbrotWorker(row, max_iterations);
+            public Worker create(Viewport viewport, int row, int max_iterations) {
+                return new MandelbrotWorker(viewport, row, max_iterations);
             }
 
         };

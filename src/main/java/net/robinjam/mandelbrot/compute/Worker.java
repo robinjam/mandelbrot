@@ -2,6 +2,7 @@ package net.robinjam.mandelbrot.compute;
 
 import java.util.concurrent.Callable;
 import net.robinjam.mandelbrot.Complex;
+import net.robinjam.mandelbrot.Viewport;
 
 /**
  * Defines the basic functionality that the workers for each type of fractal must implement.
@@ -10,10 +11,12 @@ import net.robinjam.mandelbrot.Complex;
  */
 public abstract class Worker implements Callable<Worker.Pixel[]> {
 
-    protected Complex[] row;
+    protected Viewport viewport;
+    protected int row;
     protected int max_iterations;
 
-    protected Worker(Complex[] row, int max_iterations) {
+    protected Worker(Viewport viewport, int row, int max_iterations) {
+        this.viewport = viewport;
         this.row = row;
         this.max_iterations = max_iterations;
     }

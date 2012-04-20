@@ -3,34 +3,50 @@ package net.robinjam.mandelbrot;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import net.robinjam.mandelbrot.compute.Job;
-import net.robinjam.mandelbrot.compute.JuliaWorker;
-import net.robinjam.mandelbrot.compute.MandelbrotWorker;
 import net.robinjam.mandelbrot.compute.WorkerFactory;
 
-public class FractalPanel extends JPanel implements ActionListener, SelectionListener.Callback {
+public class FractalPanel extends JPanel implements ActionListener, SelectionListener.Callback, Viewport {
     
     Job job;
     Timer timer;
     BufferedImage image;
-    Viewport viewport;
     int max_iterations;
     SelectionListener select;
     WorkerFactory factory;
+    
+        // The complex number represented by the pixel at the centre of the viewport
+    private Complex center = new Complex();
+    
+    // The current zoom level
+    private double zoom = 1;
+    
+    /**
+     * Calculates the complex number associated with the given pixel, scaled based on the current viewport settings.
+     * 
+     * @param x The x-coordinate of the pixel.
+     * @param y The y-coordinate of the pixel.
+     * @param screen_width The width of the screen.
+     * @param screen_height The height of the screen.
+     * @return The complex number associated with the given pixel.
+     */
+    @Override
+    public Complex getPixel(int x, int y) {
+        // Calculate a scale factor such that the region (-2 - 1.6i) to (2 + 1.6i) is always fully visible when the zoom level is 1
+        double scale = Math.min(getWidth() / 4, getHeight() / 3.2);
+        
+        double re = (x - getWidth() / 2) / zoom / scale + center.getRe();
+        double im = -(y - getHeight() / 2) / zoom / scale + center.getIm();
+        return new Complex(re, im);
+    }
     
     public FractalPanel(int width, int height, int max_iterations, WorkerFactory factory) {
         this.max_iterations = max_iterations;
         setPreferredSize(new Dimension(width, height));
         setBackground(Color.BLACK);
-        
-        viewport = new Viewport();
         
         timer = new Timer(100, this);
         
@@ -43,7 +59,7 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
     public void startJob() {
         if (job != null)
             job.cancel();
-        job = new Job(factory, viewport, getWidth(), getHeight(), max_iterations);
+        job = new Job(factory, this, max_iterations);
         timer.start();
     }
     
@@ -67,8 +83,8 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
     @Override
     public void selectionCreated(Rectangle selection) {
         double ratio = 1.0 / Math.max((double) selection.width / getWidth(), (double) selection.height / getHeight());
-        viewport.setCenter(viewport.getPixel((int) selection.getCenterX(), (int) selection.getCenterY(), getWidth(), getHeight()));
-        viewport.zoom(ratio);
+        center = getPixel((int) selection.getCenterX(), (int) selection.getCenterY());
+        zoom *= ratio;
         startJob();
     }
 
@@ -78,8 +94,8 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
     }
 
     void resetZoom() {
-        viewport.setZoom(1);
-        viewport.setCenter(new Complex());
+        zoom = 1;
+        center = new Complex();
         startJob();
     }
     

@@ -1,14 +1,8 @@
 package net.robinjam.mandelbrot;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import net.robinjam.mandelbrot.compute.JuliaWorker;
 import net.robinjam.mandelbrot.compute.MandelbrotWorker;
 
 /**
@@ -33,7 +27,7 @@ public class MainWindow extends JFrame implements MouseListener, MainMenu.Callba
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        final Complex c = mandelbrotPanel.viewport.getPixel(me.getX(), me.getY(), mandelbrotPanel.getWidth(), mandelbrotPanel.getHeight());
+        final Complex c = mandelbrotPanel.getPixel(me.getX(), me.getY());
         new JuliaWindow(c);
     }
 
@@ -42,6 +36,11 @@ public class MainWindow extends JFrame implements MouseListener, MainMenu.Callba
     public void maxIterationsChanged(int max_iterations) {
         mandelbrotPanel.max_iterations = max_iterations;
         mandelbrotPanel.startJob();
+    }
+    
+    @Override
+    public void resetZoom() {
+        mandelbrotPanel.resetZoom();
     }
 
     public static void main(String[] args) {
@@ -65,10 +64,5 @@ public class MainWindow extends JFrame implements MouseListener, MainMenu.Callba
 
     @Override
     public void mouseExited(MouseEvent me) {}
-
-    @Override
-    public void resetZoom() {
-        mandelbrotPanel.resetZoom();
-    }
     
 }
