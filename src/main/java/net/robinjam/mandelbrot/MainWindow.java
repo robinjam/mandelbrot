@@ -12,7 +12,7 @@ import net.robinjam.mandelbrot.compute.MandelbrotWorker;
  */
 public class MainWindow extends JFrame implements MouseListener, MainMenu.Callback {
     
-    FractalPanel mandelbrotPanel = new FractalPanel(800, 640, 1000, MandelbrotWorker.getFactory());
+    FractalPanel mandelbrotPanel = new FractalPanel(800, 640, MandelbrotWorker.getFactory());
 
     MainWindow() {
         super("Fractal Viewer");
@@ -29,13 +29,6 @@ public class MainWindow extends JFrame implements MouseListener, MainMenu.Callba
     public void mouseClicked(MouseEvent me) {
         final Complex c = mandelbrotPanel.getPixel(me.getX(), me.getY());
         new JuliaWindow(c);
-    }
-
-
-    @Override
-    public void maxIterationsChanged(int max_iterations) {
-        mandelbrotPanel.max_iterations = max_iterations;
-        mandelbrotPanel.startJob();
     }
     
     @Override

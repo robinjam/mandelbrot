@@ -13,12 +13,10 @@ public abstract class Worker implements Callable<Worker.Pixel[]> {
 
     protected Viewport viewport;
     protected int row;
-    protected int max_iterations;
 
-    protected Worker(Viewport viewport, int row, int max_iterations) {
+    protected Worker(Viewport viewport, int row) {
         this.viewport = viewport;
         this.row = row;
-        this.max_iterations = max_iterations;
     }
 
     /**

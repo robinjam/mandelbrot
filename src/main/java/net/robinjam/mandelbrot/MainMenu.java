@@ -28,7 +28,7 @@ public class MainMenu extends MenuBar implements Observer {
 
                 @Override
                 public void actionPerformed(ActionEvent ae) {
-                    callback.maxIterationsChanged(i);
+                    RenderSettings.getInstance().setMaxIterations(i);
                 }
             
             });
@@ -76,11 +76,6 @@ public class MainMenu extends MenuBar implements Observer {
      * Defines an interface that objects must implement in order to be notified when menu items are selected.
      */
     public static interface Callback {
-        
-        /**
-         * Called when the user changes the maximum number of iterations.
-         */
-        public void maxIterationsChanged(int max_iterations);
         
         /**
          * Called when the user requests the zoom level to be reset.

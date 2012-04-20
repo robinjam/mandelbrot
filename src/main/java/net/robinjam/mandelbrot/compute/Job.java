@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import net.robinjam.mandelbrot.Complex;
+import net.robinjam.mandelbrot.RenderSettings;
 import net.robinjam.mandelbrot.Viewport;
 
 /**
@@ -17,7 +18,6 @@ import net.robinjam.mandelbrot.Viewport;
 public class Job {
     
     private Viewport viewport;
-    private int max_iterations;
     private Future<Worker.Pixel[]>[] rows;
     
     /**
@@ -25,11 +25,9 @@ public class Job {
      * 
      * @param factory A {@link WorkerFactory} used to instantiate the workers used to render the fractal.
      * @param viewport The current viewport settings.
-     * @param max_iterations The maximum number of iterations to perform for each pixel.
      */
-    public Job(final WorkerFactory factory, final Viewport viewport, final int max_iterations) {
+    public Job(final WorkerFactory factory, final Viewport viewport) {
         this.viewport = viewport;
-        this.max_iterations = max_iterations;
         rows = new Future[viewport.getHeight()];
         
         ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -37,7 +35,7 @@ public class Job {
         // Iterate over every row in the fractal
         for (int y = 0; y < viewport.getHeight(); y++) {
             // Add the worker to the queue
-            rows[y] = service.submit(factory.create(viewport, y, max_iterations));
+            rows[y] = service.submit(factory.create(viewport, y));
         }
 
         // Prevent the executor service from being reused
@@ -68,7 +66,7 @@ public class Job {
             
             // Draw each pixel in the current row to the image
             for (int x = 0; x < row.length; x++) {
-                result.setRGB(x, y, calculateColour(row[x].getZn(), row[x].getN(), max_iterations).getRGB());
+                result.setRGB(x, y, calculateColour(row[x].getZn(), row[x].getN(), RenderSettings.getInstance().getMaxIterations()).getRGB());
             }
         }
         

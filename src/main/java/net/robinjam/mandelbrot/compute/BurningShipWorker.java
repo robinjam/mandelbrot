@@ -1,6 +1,7 @@
 package net.robinjam.mandelbrot.compute;
 
 import net.robinjam.mandelbrot.Complex;
+import net.robinjam.mandelbrot.RenderSettings;
 import net.robinjam.mandelbrot.Viewport;
 
 /**
@@ -10,8 +11,8 @@ import net.robinjam.mandelbrot.Viewport;
  */
 public class BurningShipWorker extends Worker {
     
-    private BurningShipWorker(Viewport viewport, int row, int max_iterations) {
-        super(viewport, row, max_iterations);
+    private BurningShipWorker(Viewport viewport, int row) {
+        super(viewport, row);
     }
     
     @Override
@@ -21,7 +22,7 @@ public class BurningShipWorker extends Worker {
             Complex z = viewport.getPixel(i, row);
             Complex zn = new Complex();
             int n;
-            for (n = 0; zn.modulusSquared() < 4 && n < max_iterations; n++) {
+            for (n = 0; zn.modulusSquared() < 4 && n < RenderSettings.getInstance().getMaxIterations(); n++) {
                 zn.setRe(Math.abs(zn.getRe()));
                 zn.setIm(Math.abs(zn.getIm()));
                 zn.square();
@@ -39,8 +40,8 @@ public class BurningShipWorker extends Worker {
         return new WorkerFactory() {
 
             @Override
-            public Worker create(Viewport viewport, int row, int max_iterations) {
-                return new BurningShipWorker(viewport, row, max_iterations);
+            public Worker create(Viewport viewport, int row) {
+                return new BurningShipWorker(viewport, row);
             }
 
         };

@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import net.robinjam.mandelbrot.compute.Job;
@@ -14,12 +16,11 @@ import net.robinjam.mandelbrot.compute.WorkerFactory;
  * 
  * @author James Robinson
  */
-public class FractalPanel extends JPanel implements ActionListener, SelectionListener.Callback, Viewport {
+public class FractalPanel extends JPanel implements ActionListener, SelectionListener.Callback, Viewport, Observer {
     
     Job job;
     Timer timer;
     BufferedImage image;
-    int max_iterations;
     SelectionListener select;
     WorkerFactory factory;
     
@@ -44,11 +45,9 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
      * 
      * @param width The width of the panel.
      * @param height The height of the panel.
-     * @param max_iterations The maximum number of iterations for each pixel.
      * @param factory The factory used to create each worker.
      */
-    public FractalPanel(int width, int height, int max_iterations, WorkerFactory factory) {
-        this.max_iterations = max_iterations;
+    public FractalPanel(int width, int height, WorkerFactory factory) {
         setPreferredSize(new Dimension(width, height));
         setBackground(Color.BLACK);
         
@@ -58,6 +57,8 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
         addMouseListener(select);
         addMouseMotionListener(select);
         this.factory = factory;
+        
+        RenderSettings.getInstance().addObserver(this);
     }
     
     /**
@@ -66,7 +67,7 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
     public void startJob() {
         if (job != null)
             job.cancel();
-        job = new Job(factory, this, max_iterations);
+        job = new Job(factory, this);
         timer.start();
     }
     
@@ -103,6 +104,11 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
     void resetZoom() {
         zoom = 1;
         center = new Complex();
+        startJob();
+    }
+
+    @Override
+    public void update(Observable o, Object o1) {
         startJob();
     }
     

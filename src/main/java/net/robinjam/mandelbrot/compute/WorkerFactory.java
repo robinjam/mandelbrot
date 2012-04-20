@@ -14,9 +14,8 @@ public interface WorkerFactory {
      * 
      * @param viewport The viewport object used to transform pixel coordinates to complex numbers.
      * @param row The row number for the current row.
-     * @param max_iterations The maximum number of iterations to perform for each pixel.
      * @return A Worker object that can be used to render the given row.
      */
-    public abstract Worker create(Viewport viewport, int row, int max_iterations);
+    public abstract Worker create(Viewport viewport, int row);
 
 }
