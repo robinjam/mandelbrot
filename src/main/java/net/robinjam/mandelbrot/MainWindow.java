@@ -14,7 +14,7 @@ import net.robinjam.mandelbrot.compute.MandelbrotWorker;
  */
 public class MainWindow extends JFrame implements MouseListener, MainMenu.Callback {
     
-    FractalPanel mandelbrotPanel = new FractalPanel(800, 600, 1000, MandelbrotWorker.getFactory());
+    FractalPanel mandelbrotPanel = new FractalPanel(800, 640, 1000, MandelbrotWorker.getFactory());
 
     MainWindow() {
         super("Fractal Viewer");
@@ -24,6 +24,7 @@ public class MainWindow extends JFrame implements MouseListener, MainMenu.Callba
         pack();
 
         setMenuBar(new MainMenu(this));
+        setResizable(false);
     }
 
     @Override
