@@ -6,13 +6,17 @@ import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * The main menu for the application.
  * 
  * @author James Robinson
  */
-public class MainMenu extends MenuBar {
+public class MainMenu extends MenuBar implements Observer {
+    
+    Menu favourites = new Menu("Favourites");
     
     public MainMenu(final Callback callback) {
         Menu maxIterations = new Menu("Max. Iterations");
@@ -30,7 +34,27 @@ public class MainMenu extends MenuBar {
             maxIterations.add(item);
         }
         
+        Favourites.getInstance().addObserver(this);
+        
         add(maxIterations);
+        add(favourites);
+    }
+
+    @Override
+    public void update(Observable o, Object o1) {
+        favourites.removeAll();
+        for (final Complex c : Favourites.getInstance().getFavourites()) {
+            MenuItem item = new MenuItem(c.toString());
+            item.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    new JuliaWindow(c);
+                }
+            
+            });
+            favourites.add(item);
+        }
     }
     
     /**

@@ -1,7 +1,11 @@
 package net.robinjam.mandelbrot;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import net.robinjam.mandelbrot.compute.JuliaWorker;
@@ -29,14 +33,8 @@ public class MainWindow extends JFrame implements MouseListener, MainMenu.Callba
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        Complex c = mandelbrotPanel.viewport.getPixel(me.getX(), me.getY(), mandelbrotPanel.getWidth(), mandelbrotPanel.getHeight());
-        FractalPanel juliaPanel = new FractalPanel(400, 320, 1000, JuliaWorker.getFactory(c));
-        JDialog juliaWindow = new JDialog(this, "Julia Set for point " + c);
-        juliaWindow.add(juliaPanel);
-        juliaWindow.pack();
-        juliaWindow.setLocationRelativeTo(this);
-        juliaWindow.setResizable(false);
-        juliaWindow.setVisible(true);
+        final Complex c = mandelbrotPanel.viewport.getPixel(me.getX(), me.getY(), mandelbrotPanel.getWidth(), mandelbrotPanel.getHeight());
+        new JuliaWindow(c);
     }
 
 
