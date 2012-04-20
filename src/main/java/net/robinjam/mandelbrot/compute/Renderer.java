@@ -61,7 +61,7 @@ public class Renderer {
             
             // Draw each pixel in the current row to the image
             for (int x = 0; x < row.length; x++) {
-                result.setRGB(x, y, RenderSettings.getInstance().getColourScheme().calculateColour(row[x].getZn(), row[x].getN()).getRGB());
+                result.setRGB(x, y, RenderSettings.getInstance().getColourScheme().calculateColour(row[x]).getRGB());
             }
         }
         
