@@ -15,7 +15,9 @@ import net.robinjam.mandelbrot.Viewport;
  * 
  * @author James Robinson
  */
-public class Job {
+public class Renderer {
+    
+    private static ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     
     private Viewport viewport;
     private Future<Worker.Pixel[]>[] rows;
@@ -26,20 +28,15 @@ public class Job {
      * @param factory A {@link WorkerFactory} used to instantiate the workers used to render the fractal.
      * @param viewport The current viewport settings.
      */
-    public Job(final WorkerFactory factory, final Viewport viewport) {
+    public Renderer(final WorkerFactory factory, final Viewport viewport) {
         this.viewport = viewport;
         rows = new Future[viewport.getHeight()];
-        
-        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
         // Iterate over every row in the fractal
         for (int y = 0; y < viewport.getHeight(); y++) {
             // Add the worker to the queue
             rows[y] = service.submit(factory.create(viewport, y));
         }
-
-        // Prevent the executor service from being reused
-        service.shutdown();
     }
     
     /**

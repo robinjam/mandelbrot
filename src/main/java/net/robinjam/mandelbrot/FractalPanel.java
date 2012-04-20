@@ -8,7 +8,7 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import net.robinjam.mandelbrot.compute.Job;
+import net.robinjam.mandelbrot.compute.Renderer;
 import net.robinjam.mandelbrot.compute.WorkerFactory;
 
 /**
@@ -18,7 +18,7 @@ import net.robinjam.mandelbrot.compute.WorkerFactory;
  */
 public class FractalPanel extends JPanel implements ActionListener, SelectionListener.Callback, Viewport, Observer {
     
-    Job job;
+    Renderer job;
     Timer timer;
     BufferedImage image;
     SelectionListener select;
@@ -67,7 +67,7 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
     public void startJob() {
         if (job != null)
             job.cancel();
-        job = new Job(factory, this);
+        job = new Renderer(factory, this);
         timer.start();
     }
     
