@@ -38,6 +38,33 @@ public class MainMenu extends MenuBar implements Observer {
         
         // View menu
         Menu view = new Menu("View");
+        MenuItem mandelbrot = new MenuItem("Mandelbrot Set");
+        mandelbrot.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                callback.changeFractal(Callback.FractalType.MANDELBROT);
+            }
+        
+        });
+        MenuItem burningShip = new MenuItem("Burning Ship Fractal");
+        burningShip.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                callback.changeFractal(Callback.FractalType.BURNING_SHIP);
+            }
+        
+        });
+        MenuItem tricorn = new MenuItem("Tricorn Fractal");
+        tricorn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                callback.changeFractal(Callback.FractalType.TRICORN);
+            }
+        
+        });
         MenuItem resetZoom = new MenuItem("Reset Zoom");
         resetZoom.addActionListener(new ActionListener() {
 
@@ -47,6 +74,10 @@ public class MainMenu extends MenuBar implements Observer {
             }
         
         });
+        view.add(mandelbrot);
+        view.add(burningShip);
+        view.add(tricorn);
+        view.addSeparator();
         view.add(resetZoom);
         
         add(maxIterations);
@@ -82,6 +113,10 @@ public class MainMenu extends MenuBar implements Observer {
          * Called when the user requests the zoom level to be reset.
          */
         public void resetZoom();
+        
+        public void changeFractal(FractalType type);
+        
+        public enum FractalType { MANDELBROT, BURNING_SHIP, TRICORN }
         
     }
     

@@ -8,8 +8,8 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import net.robinjam.mandelbrot.compute.Renderer;
-import net.robinjam.mandelbrot.compute.WorkerFactory;
+import net.robinjam.mandelbrot.MainMenu.Callback.FractalType;
+import net.robinjam.mandelbrot.compute.*;
 
 /**
  * Renders and displays a fractal.
@@ -110,6 +110,23 @@ public class FractalPanel extends JPanel implements ActionListener, SelectionLis
     @Override
     public void update(Observable o, Object o1) {
         startJob();
+    }
+
+    void changeFractal(FractalType type) {
+        switch(type) {
+            case BURNING_SHIP:
+                factory = BurningShipWorker.getFactory();
+                startJob();
+                break;
+            case MANDELBROT:
+                factory = MandelbrotWorker.getFactory();
+                startJob();
+                break;
+            case TRICORN:
+                factory = TricornWorker.getFactory();
+                startJob();
+                break;
+        }
     }
     
 }

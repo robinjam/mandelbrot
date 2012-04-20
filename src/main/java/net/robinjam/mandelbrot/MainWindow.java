@@ -45,7 +45,6 @@ public class MainWindow extends JFrame implements MouseListener, MainMenu.Callba
     
     // Unused listeners
     
-    
     @Override
     public void mousePressed(MouseEvent me) {}
 
@@ -57,5 +56,10 @@ public class MainWindow extends JFrame implements MouseListener, MainMenu.Callba
 
     @Override
     public void mouseExited(MouseEvent me) {}
+
+    @Override
+    public void changeFractal(FractalType type) {
+        mandelbrotPanel.changeFractal(type);
+    }
     
 }
