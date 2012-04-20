@@ -3,6 +3,7 @@ package net.robinjam.mandelbrot;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
@@ -63,7 +64,7 @@ public class MainMenu extends MenuBar implements Observer {
 
                 @Override
                 public void actionPerformed(ActionEvent ae) {
-                    new JuliaWindow(c);
+                    new JuliaWindow((Window) getParent(), c);
                 }
             
             });

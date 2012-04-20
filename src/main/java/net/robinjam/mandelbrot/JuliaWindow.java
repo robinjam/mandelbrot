@@ -1,16 +1,17 @@
 package net.robinjam.mandelbrot;
 
 import java.awt.BorderLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import net.robinjam.mandelbrot.compute.JuliaWorker;
 
-public class JuliaWindow extends JFrame {
+public class JuliaWindow extends JDialog {
     
-    public JuliaWindow(final Complex c) {
-        super("Julia Set for point " + c);
+    public JuliaWindow(Window parent, final Complex c) {
+        super(parent, "Julia Set for point " + c);
         setLayout(new BorderLayout());
         FractalPanel juliaPanel = new FractalPanel(400, 320, JuliaWorker.getFactory(c));
         add(juliaPanel, BorderLayout.CENTER);
@@ -25,7 +26,7 @@ public class JuliaWindow extends JFrame {
         });
         add(favouritesButton, BorderLayout.SOUTH);
         pack();
-        setLocationRelativeTo(this);
+        setLocationRelativeTo(parent);
         setResizable(false);
         setVisible(true);
     }

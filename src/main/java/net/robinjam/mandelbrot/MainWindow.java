@@ -28,7 +28,7 @@ public class MainWindow extends JFrame implements MouseListener, MainMenu.Callba
     @Override
     public void mouseClicked(MouseEvent me) {
         final Complex c = mandelbrotPanel.getPixel(me.getX(), me.getY());
-        new JuliaWindow(c);
+        new JuliaWindow(this, c);
     }
     
     @Override
