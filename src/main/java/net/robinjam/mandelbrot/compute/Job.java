@@ -21,31 +21,24 @@ public class Job {
         this.max_iterations = max_iterations;
         rows = new Future[height];
         
-        new Thread(new Runnable() {
+        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-            @Override
-            public void run() {
-                ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-                for (int y = 0; y < height; y++) {
-                    Complex[] row = new Complex[width];
-                    for (int x = 0; x < width; x++) {
-                        row[x] = viewport.getPixel(x, y, width, height);
-                    }
-                    rows[y] = service.submit(factory.create(row, max_iterations));
-                }
-
-                service.shutdown();
+        for (int y = 0; y < height; y++) {
+            Complex[] row = new Complex[width];
+            for (int x = 0; x < width; x++) {
+                row[x] = viewport.getPixel(x, y, width, height);
             }
-        
-        }).start();
+            rows[y] = service.submit(factory.create(row, max_iterations));
+        }
+
+        service.shutdown();
     }
     
     public BufferedImage getImage() {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         
         for (int y = 0; y < rows.length; y++) {
-            if (rows[y] == null || !rows[y].isDone()) continue;
+            if (!rows[y].isDone()) continue;
             MandelbrotWorker.Pixel[] row = null;
             
             try {
@@ -64,14 +57,13 @@ public class Job {
     
     public void cancel() {
         for (Future row : rows)
-            if (row != null)
-                row.cancel(false);
+            row.cancel(false);
     }
     
     public boolean isDone() {
         int num_complete = 0;
         for (Future f : rows)
-            if (f != null && f.isDone()) num_complete++;
+            if (f.isDone()) num_complete++;
         return num_complete == rows.length;
     }
     
