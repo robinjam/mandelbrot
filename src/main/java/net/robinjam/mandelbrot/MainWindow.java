@@ -12,6 +12,8 @@ import net.robinjam.mandelbrot.compute.MandelbrotWorker;
  */
 public class MainWindow extends JFrame implements MouseListener, MainMenu.Callback {
     
+	private static final long serialVersionUID = 1L;
+	
     FractalPanel mandelbrotPanel = new FractalPanel(800, 640, MandelbrotWorker.getFactory());
 
     MainWindow() {

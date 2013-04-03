@@ -26,6 +26,7 @@ public class Renderer {
      * @param factory A {@link WorkerFactory} used to instantiate the workers used to render the fractal.
      * @param viewport The current viewport settings.
      */
+    @SuppressWarnings("unchecked")
     public Renderer(final WorkerFactory factory, final Viewport viewport) {
         this.viewport = viewport;
         rows = new Future[viewport.getHeight()];
@@ -72,7 +73,7 @@ public class Renderer {
      * Cancels the render task.
      */
     public void cancel() {
-        for (Future row : rows)
+        for (Future<Worker.Pixel[]> row : rows)
             row.cancel(false);
     }
     
@@ -81,7 +82,7 @@ public class Renderer {
      */
     public boolean isDone() {
         int num_complete = 0;
-        for (Future f : rows)
+        for (Future<Worker.Pixel[]> f : rows)
             if (f.isDone()) num_complete++;
         return num_complete == rows.length;
     }

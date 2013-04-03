@@ -10,6 +10,8 @@ import net.robinjam.mandelbrot.compute.JuliaWorker;
 
 public class JuliaWindow extends JDialog {
     
+	private static final long serialVersionUID = 1L;
+
     public JuliaWindow(Window parent, final Complex c) {
         super(parent, "Julia Set for point " + c);
         setLayout(new BorderLayout());

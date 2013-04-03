@@ -18,6 +18,8 @@ import net.robinjam.mandelbrot.compute.*;
  */
 public class FractalPanel extends JPanel implements ActionListener, SelectionListener.Callback, Viewport, Observer {
     
+	private static final long serialVersionUID = 1L;
+
     Renderer job;
     Timer timer;
     BufferedImage image;

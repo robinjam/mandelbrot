@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.Observable;
 import java.util.Observer;
-import net.robinjam.mandelbrot.render.ColourScheme;
 import net.robinjam.mandelbrot.render.NormalColouring;
 import net.robinjam.mandelbrot.render.SmoothColouring;
 
@@ -20,6 +19,8 @@ import net.robinjam.mandelbrot.render.SmoothColouring;
  */
 public class MainMenu extends MenuBar implements Observer {
     
+	private static final long serialVersionUID = 1L;
+	
     Menu favourites = new Menu("Favourites");
     
     public MainMenu(final Callback callback) {
